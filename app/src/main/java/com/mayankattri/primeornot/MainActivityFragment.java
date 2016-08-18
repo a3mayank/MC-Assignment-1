@@ -4,6 +4,7 @@ import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -27,9 +28,10 @@ public class MainActivityFragment extends Fragment {
     private static final String INCORRECT_ANSWER = "Incorrect Answer :(";
     public static final String CURRENT_VALUE = "Current Value";
     private String MESSAGE = "Activity Message : ";
-    private int image_index = 0;
-
+    // ArrayList of images for background.
     ArrayList<Integer> myImageList = new ArrayList<>();
+    // index for images arraylist
+    private int image_index = 0;
 
     public MainActivityFragment() {
     }
@@ -90,7 +92,7 @@ public class MainActivityFragment extends Fragment {
 
         final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        question_String = "Is " + randomInt + " prime or not ?";
+        question_String = "Is " + randomInt + " a prime number ?";
 
         question_View = (TextView) rootView.findViewById(R.id.TV_ques);
         question_View.setText(question_String);
@@ -146,7 +148,7 @@ public class MainActivityFragment extends Fragment {
             public void onClick(View v)
             {
                 randomInt = randomNumber();
-                question_String = "Is " + randomInt + " prime or not ?";
+                question_String = "Is " + randomInt + " a prime number ?";
                 question_View.setText(question_String);
 
                 // if all images displayed in background, then again start from the first image.
@@ -167,10 +169,25 @@ public class MainActivityFragment extends Fragment {
         Snackbar mSnackbar = Snackbar.make(v, response, Snackbar.LENGTH_LONG);
         View mView = mSnackbar.getView();
         TextView mTextView = (TextView) mView.findViewById(android.support.design.R.id.snackbar_text);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+        // size of text in snackbar
+        mTextView.setTextSize( 30 );
+
+        if(response.contains("Incorrect")) {
+            // set snackbar colour to RED if answer is incorrect.
+            mView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.RED));
+        } else {
+            // set snackbar colour to GREEN if answer is correct.
+            mView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.GREEN));
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            // "setTextAlignment" available from API Level 17, You can't use it before 17.
             mTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        else
+        }
+        else {
+            // "setGravity" available from API Level 1. You can use it anywhere.
             mTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+        }
         mSnackbar.show();
     }
 

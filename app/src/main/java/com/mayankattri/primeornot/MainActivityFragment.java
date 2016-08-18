@@ -196,9 +196,13 @@ public class MainActivityFragment extends Fragment {
     }
 
     // checks if a number is prime or not
-    private boolean isPrime(int x) {
-        for (int i = 2; i * i <= x; i++) {
-            if (x % i == 0) {
+    private boolean isPrime(int value) {
+        if(value == 1) {
+            Log.v("isPrime: " + randomInt, " no");
+            return false;
+        }
+        for (int i = 2; i * i <= value; i++) {
+            if (value % i == 0) {
                 Log.v("isPrime: " + randomInt, " no");
                 return false;
             }

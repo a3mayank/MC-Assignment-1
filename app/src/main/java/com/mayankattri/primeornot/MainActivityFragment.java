@@ -26,7 +26,7 @@ public class MainActivityFragment extends Fragment {
     private String question_String;
     private static final String CORRECT_ANSWER = "Correct Answer :)";
     private static final String INCORRECT_ANSWER = "Incorrect Answer :(";
-    public static final String CURRENT_VALUE = "Current Value";
+    private static final String CURRENT_VALUE = "Current Value";
     private String MESSAGE = "Activity Message : ";
     // ArrayList of images for background.
     ArrayList<Integer> myImageList = new ArrayList<>();

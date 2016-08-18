@@ -1,15 +1,16 @@
 package com.mayankattri.primeornot;
 
-import android.content.Context;
+import android.os.Build;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Random;
 
@@ -21,6 +22,7 @@ public class MainActivityFragment extends Fragment {
     private int value;
     private TextView ques;
     private String quesStr;
+    private String msg = "Message : ";
 
     public MainActivityFragment() {
     }
@@ -46,10 +48,36 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        Log.d(msg, " OnStart invoked");
         quesStr = "Is " + value + " prime or not ?";
 
         ques = (TextView) getView().findViewById(R.id.TV_ques);
         ques.setText(quesStr);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Log.d(msg, " OnResume invoked");
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        Log.d(msg, " OnPause invoked");
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        Log.d(msg, " OnStop invoked");
+    }
+
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        Log.d(msg, " OnDestroy invoked");
     }
 
     @Override
@@ -58,48 +86,68 @@ public class MainActivityFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        Button button = (Button) rootView.findViewById(R.id.B_correct);
-        button.setOnClickListener(new View.OnClickListener()
+        Button buttonYes = (Button) rootView.findViewById(R.id.B_correct);
+        buttonYes.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                Context context = getActivity().getApplicationContext();
-                int duration = Toast.LENGTH_SHORT;
 
                 if(isPrime(value)) {
-                    Toast toast = Toast.makeText(context, "Wrong Answer :(", duration);
-                    toast.show();
+                    Snackbar mSnackbar = Snackbar.make(v, "You are Wrong :(", Snackbar.LENGTH_LONG);
+                    View mView = mSnackbar.getView();
+                    TextView mTextView = (TextView) mView.findViewById(android.support.design.R.id.snackbar_text);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+                        mTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                    else
+                        mTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+                    mSnackbar.show();
                 }
                 else {
-                    Toast toast = Toast.makeText(context, "Correct Answer :)", duration);
-                    toast.show();
+                    Snackbar mSnackbar = Snackbar.make(v, "You are Right :)", Snackbar.LENGTH_LONG);
+                    View mView = mSnackbar.getView();
+                    TextView mTextView = (TextView) mView.findViewById(android.support.design.R.id.snackbar_text);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+                        mTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                    else
+                        mTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+                    mSnackbar.show();
                 }
             }
         });
 
-        Button button1 = (Button) rootView.findViewById(R.id.B_incorrect);
-        button1.setOnClickListener(new View.OnClickListener()
+        Button buttonNo = (Button) rootView.findViewById(R.id.B_incorrect);
+        buttonNo.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                Context context = getActivity().getApplicationContext();
-                int duration = Toast.LENGTH_SHORT;
 
                 if(isPrime(value)) {
-                    Toast toast = Toast.makeText(context, "Correct Answer :)", duration);
-                    toast.show();
+                    Snackbar mSnackbar = Snackbar.make(v, "You are Right :)", Snackbar.LENGTH_LONG);
+                    View mView = mSnackbar.getView();
+                    TextView mTextView = (TextView) mView.findViewById(android.support.design.R.id.snackbar_text);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+                        mTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                    else
+                        mTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+                    mSnackbar.show();
                 }
                 else {
-                    Toast toast = Toast.makeText(context, "Wrong Answer :(", duration);
-                    toast.show();
+                    Snackbar mSnackbar = Snackbar.make(v, "You are Wrong :(", Snackbar.LENGTH_LONG);
+                    View mView = mSnackbar.getView();
+                    TextView mTextView = (TextView) mView.findViewById(android.support.design.R.id.snackbar_text);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+                        mTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                    else
+                        mTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+                    mSnackbar.show();
                 }
             }
         });
 
-        Button button3 = (Button) rootView.findViewById(R.id.B_next);
-        button3.setOnClickListener(new View.OnClickListener()
+        Button buttonNext = (Button) rootView.findViewById(R.id.B_next);
+        buttonNext.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -134,7 +182,7 @@ public class MainActivityFragment extends Fragment {
 
     private int randomNumber() {
         Random rand = new Random();
-        int min = 2;
+        int min = 1;
         int max = 1000;
 
         // nextInt is normally exclusive of the top value,

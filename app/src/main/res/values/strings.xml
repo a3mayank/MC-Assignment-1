@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">PrimeOrNot</string>
     <string name="action_settings">Settings</string>
+
+    <string name="port_yes">Yes</string>
+    <string name="port_no">No</string>
+    <string name="port_next">Next</string>
+
+    <string name="land_yes">Yes</string>
+    <string name="land_no">No</string>
+    <string name="land_next">Next</string>
 </resources>

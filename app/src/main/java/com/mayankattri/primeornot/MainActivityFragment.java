@@ -27,6 +27,7 @@ public class MainActivityFragment extends Fragment {
     private static final String CORRECT_ANSWER = "Correct Answer :)";
     private static final String INCORRECT_ANSWER = "Incorrect Answer :(";
     private static final String CURRENT_VALUE = "Current Value";
+    private static final String CURRENT_BG_INDEX = "Current BG Index";
     private String MESSAGE = "Activity Message : ";
     // ArrayList of images for background.
     ArrayList<Integer> myImageList = new ArrayList<>();
@@ -41,9 +42,11 @@ public class MainActivityFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if(savedInstanceState == null || !savedInstanceState.containsKey(CURRENT_VALUE)) {
             randomInt = randomNumber();
+            image_index = 0;
         }
         else {
             randomInt = savedInstanceState.getInt(CURRENT_VALUE);
+            image_index = savedInstanceState.getInt(CURRENT_BG_INDEX);
         }
     }
 
@@ -53,6 +56,7 @@ public class MainActivityFragment extends Fragment {
         // This saves configuration and anything else that may be required to restore.
         super.onSaveInstanceState(outState);
         outState.putInt(CURRENT_VALUE, randomInt);
+        outState.putInt(CURRENT_BG_INDEX, image_index - 1);
     }
 
     @Override

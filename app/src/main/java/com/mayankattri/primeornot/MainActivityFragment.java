@@ -21,11 +21,13 @@ import java.util.Random;
 public class MainActivityFragment extends Fragment {
 
     private int randomInt;
-    private int image_count = 0;
-    private TextView ques;
-    private String quesStr;
+    private TextView question_View;
+    private String question_String;
+    private static final String CORRECT_ANSWER = "Correct Answer :)";
+    private static final String INCORRECT_ANSWER = "Incorrect Answer :(";
     public static final String CURRENT_VALUE = "Current Value";
     private String MESSAGE = "Activity Message : ";
+    private int image_index = 0;
 
     ArrayList<Integer> myImageList = new ArrayList<>();
 
@@ -41,7 +43,6 @@ public class MainActivityFragment extends Fragment {
         else {
             randomInt = savedInstanceState.getInt(CURRENT_VALUE);
         }
-//        setHasOptionsMenu(true);
     }
 
     @Override
@@ -89,11 +90,12 @@ public class MainActivityFragment extends Fragment {
 
         final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        quesStr = "Is " + randomInt + " prime or not ?";
+        question_String = "Is " + randomInt + " prime or not ?";
 
-        ques = (TextView) rootView.findViewById(R.id.TV_ques);
-        ques.setText(quesStr);
+        question_View = (TextView) rootView.findViewById(R.id.TV_ques);
+        question_View.setText(question_String);
 
+        // adding the background images into the ArrayList
         myImageList.add(R.drawable.a);
         myImageList.add(R.drawable.b);
         myImageList.add(R.drawable.c);
@@ -105,6 +107,8 @@ public class MainActivityFragment extends Fragment {
         Button buttonNo = (Button) rootView.findViewById(R.id.B_incorrect);
         Button buttonNext = (Button) rootView.findViewById(R.id.B_next);
 
+        rootView.setBackgroundResource(myImageList.get(image_index++));
+
         // when "Yes" button is clicked, it tells if the answer is correct or incorrect.
         buttonYes.setOnClickListener(new View.OnClickListener()
         {
@@ -112,24 +116,10 @@ public class MainActivityFragment extends Fragment {
             public void onClick(View v)
             {
                 if(isPrime(randomInt)) {
-                    Snackbar mSnackbar = Snackbar.make(v, "You are Wrong :(", Snackbar.LENGTH_LONG);
-                    View mView = mSnackbar.getView();
-                    TextView mTextView = (TextView) mView.findViewById(android.support.design.R.id.snackbar_text);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-                        mTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                    else
-                        mTextView.setGravity(Gravity.CENTER_HORIZONTAL);
-                    mSnackbar.show();
+                    showAnswer(v, INCORRECT_ANSWER);
                 }
                 else {
-                    Snackbar mSnackbar = Snackbar.make(v, "You are Right :)", Snackbar.LENGTH_LONG);
-                    View mView = mSnackbar.getView();
-                    TextView mTextView = (TextView) mView.findViewById(android.support.design.R.id.snackbar_text);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-                        mTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                    else
-                        mTextView.setGravity(Gravity.CENTER_HORIZONTAL);
-                    mSnackbar.show();
+                    showAnswer(v, CORRECT_ANSWER);
                 }
             }
         });
@@ -141,24 +131,10 @@ public class MainActivityFragment extends Fragment {
             public void onClick(View v)
             {
                 if(isPrime(randomInt)) {
-                    Snackbar mSnackbar = Snackbar.make(v, "You are Right :)", Snackbar.LENGTH_LONG);
-                    View mView = mSnackbar.getView();
-                    TextView mTextView = (TextView) mView.findViewById(android.support.design.R.id.snackbar_text);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-                        mTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                    else
-                        mTextView.setGravity(Gravity.CENTER_HORIZONTAL);
-                    mSnackbar.show();
+                    showAnswer(v, CORRECT_ANSWER);
                 }
                 else {
-                    Snackbar mSnackbar = Snackbar.make(v, "You are Wrong :(", Snackbar.LENGTH_LONG);
-                    View mView = mSnackbar.getView();
-                    TextView mTextView = (TextView) mView.findViewById(android.support.design.R.id.snackbar_text);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-                        mTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                    else
-                        mTextView.setGravity(Gravity.CENTER_HORIZONTAL);
-                    mSnackbar.show();
+                    showAnswer(v, INCORRECT_ANSWER);
                 }
             }
         });
@@ -170,17 +146,32 @@ public class MainActivityFragment extends Fragment {
             public void onClick(View v)
             {
                 randomInt = randomNumber();
-                quesStr = "Is " + randomInt + " prime or not ?";
-                ques.setText(quesStr);
-                if(image_count == 6) {
-                    image_count = 0;
+                question_String = "Is " + randomInt + " prime or not ?";
+                question_View.setText(question_String);
+
+                // if all images displayed in background, then again start from the first image.
+                if(image_index == myImageList.size()) {
+                    image_index = 0;
                 }
-                rootView.setBackgroundResource(myImageList.get(image_count));
-                image_count++;
+                // setting background image.
+                rootView.setBackgroundResource(myImageList.get(image_index));
+                image_index++;
             }
         });
 
         return rootView;
+    }
+
+    // shows the response inside a snackbar.
+    private void showAnswer(View v, String response) {
+        Snackbar mSnackbar = Snackbar.make(v, response, Snackbar.LENGTH_LONG);
+        View mView = mSnackbar.getView();
+        TextView mTextView = (TextView) mView.findViewById(android.support.design.R.id.snackbar_text);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+            mTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        else
+            mTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+        mSnackbar.show();
     }
 
     // checks if a number is prime or not

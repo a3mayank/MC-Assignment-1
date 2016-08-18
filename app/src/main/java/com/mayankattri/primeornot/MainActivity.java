@@ -1,6 +1,7 @@
 package com.mayankattri.primeornot;
 
 import android.os.Bundle;
+import android.os.Process;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -33,8 +34,10 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        // it quits the app
+        if (id == R.id.action_quit) {
+            Process.killProcess(Process.myPid());
+            System.exit(1);
             return true;
         }
 

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -19,10 +20,14 @@ import java.util.Random;
  */
 public class MainActivityFragment extends Fragment {
 
-    private int value;
+    private int randomInt;
+    private int image_count = 0;
     private TextView ques;
     private String quesStr;
-    private String msg = "Message : ";
+    public static final String CURRENT_VALUE = "Current Value";
+    private String MESSAGE = "Activity Message : ";
+
+    ArrayList<Integer> myImageList = new ArrayList<>();
 
     public MainActivityFragment() {
     }
@@ -30,70 +35,83 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(savedInstanceState == null || !savedInstanceState.containsKey("valueKey")) {
-            value = randomNumber();
+        if(savedInstanceState == null || !savedInstanceState.containsKey(CURRENT_VALUE)) {
+            randomInt = randomNumber();
         }
         else {
-            value = savedInstanceState.getInt("valueKey");
+            randomInt = savedInstanceState.getInt(CURRENT_VALUE);
         }
-        setHasOptionsMenu(true);
+//        setHasOptionsMenu(true);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        // Called when the layout should save its state.
+        // This saves configuration and anything else that may be required to restore.
         super.onSaveInstanceState(outState);
-        outState.putInt("valueKey", value);
+        outState.putInt(CURRENT_VALUE, randomInt);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        Log.d(msg, " OnStart invoked");
-        quesStr = "Is " + value + " prime or not ?";
-
-        ques = (TextView) getView().findViewById(R.id.TV_ques);
-        ques.setText(quesStr);
+        Log.d(MESSAGE, " OnStart invoked");
     }
 
     @Override
     public void onResume(){
         super.onResume();
-        Log.d(msg, " OnResume invoked");
+        Log.d(MESSAGE, " OnResume invoked");
     }
 
     @Override
     public void onPause(){
         super.onPause();
-        Log.d(msg, " OnPause invoked");
+        Log.d(MESSAGE, " OnPause invoked");
     }
 
     @Override
     public void onStop(){
         super.onStop();
-        Log.d(msg, " OnStop invoked");
+        Log.d(MESSAGE, " OnStop invoked");
     }
 
 
     @Override
     public void onDestroy(){
         super.onDestroy();
-        Log.d(msg, " OnDestroy invoked");
+        Log.d(MESSAGE, " OnDestroy invoked");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+        quesStr = "Is " + randomInt + " prime or not ?";
+
+        ques = (TextView) rootView.findViewById(R.id.TV_ques);
+        ques.setText(quesStr);
+
+        myImageList.add(R.drawable.a);
+        myImageList.add(R.drawable.b);
+        myImageList.add(R.drawable.c);
+        myImageList.add(R.drawable.d);
+        myImageList.add(R.drawable.e);
+        myImageList.add(R.drawable.f);
 
         Button buttonYes = (Button) rootView.findViewById(R.id.B_correct);
+        Button buttonNo = (Button) rootView.findViewById(R.id.B_incorrect);
+        Button buttonNext = (Button) rootView.findViewById(R.id.B_next);
+
+        // when "Yes" button is clicked, it tells if the answer is correct or incorrect.
         buttonYes.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-
-                if(isPrime(value)) {
+                if(isPrime(randomInt)) {
                     Snackbar mSnackbar = Snackbar.make(v, "You are Wrong :(", Snackbar.LENGTH_LONG);
                     View mView = mSnackbar.getView();
                     TextView mTextView = (TextView) mView.findViewById(android.support.design.R.id.snackbar_text);
@@ -116,14 +134,13 @@ public class MainActivityFragment extends Fragment {
             }
         });
 
-        Button buttonNo = (Button) rootView.findViewById(R.id.B_incorrect);
+        // when "No" button is clicked, it tells if the answer is correct or incorrect.
         buttonNo.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-
-                if(isPrime(value)) {
+                if(isPrime(randomInt)) {
                     Snackbar mSnackbar = Snackbar.make(v, "You are Right :)", Snackbar.LENGTH_LONG);
                     View mView = mSnackbar.getView();
                     TextView mTextView = (TextView) mView.findViewById(android.support.design.R.id.snackbar_text);
@@ -146,40 +163,39 @@ public class MainActivityFragment extends Fragment {
             }
         });
 
-        Button buttonNext = (Button) rootView.findViewById(R.id.B_next);
+        // when "Next" button is clicked, value of randomInt is changed
         buttonNext.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                value = randomNumber();
-                quesStr = "Is " + value + " prime or not ?";
+                randomInt = randomNumber();
+                quesStr = "Is " + randomInt + " prime or not ?";
                 ques.setText(quesStr);
+                if(image_count == 6) {
+                    image_count = 0;
+                }
+                rootView.setBackgroundResource(myImageList.get(image_count));
+                image_count++;
             }
         });
 
         return rootView;
     }
 
+    // checks if a number is prime or not
     private boolean isPrime(int x) {
-        int count = 0;
-
-        for (int i = 1; i <= x; i++) {
+        for (int i = 2; i * i <= x; i++) {
             if (x % i == 0) {
-                count++;
+                Log.v("isPrime: " + randomInt, " no");
+                return false;
             }
         }
-
-        if (count == 2) {
-            Log.v("isPrime: " + value, "yes");
-            return true;
-        }
-        else {
-            Log.v("isPrime: " + value, "no");
-            return false;
-        }
+        Log.v("isPrime: " + randomInt, " yes");
+        return true;
     }
 
+    // returns a random integer between 1 and 1000 inclusive.
     private int randomNumber() {
         Random rand = new Random();
         int min = 1;
@@ -187,7 +203,6 @@ public class MainActivityFragment extends Fragment {
 
         // nextInt is normally exclusive of the top value,
         // so add 1 to make it inclusive
-
         return rand.nextInt((max - min) + 1) + min;
     }
 
